@@ -1,0 +1,78 @@
+1.Describe Git branching strategies (Git-flow, single branch, feature branch etc.) which you have used and what purpose does it serves.
+Answer :
+Git is a version control system used for tracking changes in computer files. It is generally used for source code management in software development.
+•	Git is used to tracking changes in the source code
+•	The distributed version control tool is used for source code management
+•	It allows multiple developers to work together
+•	It supports non-linear development through its various of parallel branches
+
+2.How do you revert a commit that has already been pushed and made public?
+Answer :
+git reflog
+git reset HEAD@{index}
+git push
+
+3.How do you normally solve conflicts in a feature branch before merge?
+Answer :
+git log
+git diff
+git revert
+git status
+
+4.“200 OK” what does it mean and show use case this HTTP Status?
+Answer :
+The request has succeeded. The meaning of the success depends on the HTTP method:
+•	GET: The resource has been fetched and is transmitted in the message body.
+•	HEAD: The representation headers are included in the response without any message body.
+•	PUT or POST: The resource describing the result of the action is transmitted in the message body.
+•	TRACE: The message body contains the request message as received by the server.
+
+5.“201 Created” what does it mean and show use case this HTTP Status?
+Answer :
+The request has succeeded and a new resource has been created as a result. This is typically the response sent after POST requests, or some PUT requests.
+
+6.“301 Moved Permanently” what does it mean and show use case this HTTP Status?
+Answer :
+redirect status response code indicates that the resource requested has been definitively moved to the URL given by the Location headers
+
+7.“400 Bad Request” what does it mean and how to identify the problem?
+Answer :
+the server cannot or will not process the request due to something that is perceived to be a client error (e.g., malformed request syntax, invalid request message framing, or deceptive request routing).
+	
+8.“401 Unauthorized” what does it mean and how to identify the problem?
+Answer :
+client error status response code indicates that the request has not been applied because it lacks valid authentication credentials for the target resource.
+A user-agent recieving this header would first prompt the user for their username and password,
+
+9.“403 Forbidden” what does it mean and how to identify the problem?
+Answer :
+The 403 Forbidden status code means that the client request has been rejected because the client does not have rights to access the content
+
+10.“404 Not Found” what does it mean and how to identify the problem?
+Answer :
+The 404 Not Found status code means that the server either did not find a current representation for the requested resource or is trying to hide its existence from an unauthorized client.
+
+11.“500 Internal Server Error” what does it mean and how to identify the problem?
+Answer :
+server error response code indicates that the server encountered an unexpected condition that prevented it from fulfilling the request
+
+12.“502 Bad Gateway” what does it mean and how to identify the problem?
+Answer :
+The 502 Bad Gateway response code means that the server received an invalid response while working as a gateway to handle the response.
+
+13.“503 Service Unavailable” what does it mean and how to identify the problem?
+Answer :
+The 503 Service Unavailable response code means that the server is currently not ready to handle the request. This is a common occurrence when the server is down for maintenance or is overloaded.
+
+14.“504 Gateway Timeout” what does it mean and how to identify the problem?
+Answer :
+The 504 Gateway Timeout response code means that the server acting as a gateway could not get a response time.
+
+15.What are Linux network tools do you use for troubleshooting network problems as well as usage scenarios for each tool?
+Answer :
+Ping A network troubleshooting tool used to test the reachability of a host on an Internet Protocol (IP) network.
+NSLookup A network administration command-line tool for querying the Domain Name System (DNS) to obtain the mapping between a domain name and IP address.
+PuTTY A free and open-source terminal emulator, serial console, and network file transfer application.
+traceroute is a network troubleshooting utility which shows number of hops taken to reach destination also determine packets traveling path.
+Netstat (Network Statistic) command display connection info, routing table information etc
+Dig (domain information groper) query DNS related information like A Record, CNAME, MX Record etc. This command mainly use to troubleshoot DNS related query.
