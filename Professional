@@ -1,0 +1,54 @@
+1.Assume that you are using a private cloud for your infrastructure. How do you manage logs, metrics, and alerts for your infrastructure and applications? Which tools do you use and why?
+Answer :
+ใช้ Stackdriver agent หรือ Grafana มาเป็นตัว Monitoring Metric โดยการใช้งานถ้าเป็น GCP อาจจะใช้ Pub/Sub เป็นตัวส่งข้อมูลมาที่ app ผ่านพวก Rest หรือถ้าเป็น Grafana สามารถใช้การ Alert มาทางอีเมล์ได้เลย เพื่อเฝ้าดูติดตามการใช้งาน Resource ในระบบ
+
+2.How do you secure the following?
+·  	application
+·  	infrastructure
+·  	data
+Answer :
+Application ใช้ protocol HTTPS เนื่องจาก HTTP ที่ใช้งานกันอยู่ในปัจจุบันมีจุดบกพร่องในด้านการรักษาความปลอดภัย 2 ประการ หลักๆ คือข้อมูล HTTP เป็นข้อมูล Plaintext ซึ่งสามารถดักจับได้โดยโปรแกรม Sniffer ต่างๆ และโพรโตคอล HTTP ยังไม่สามารถตรวจสอบความถูกต้องของข้อมูลที่รับส่งนั้นๆในการรักษาความปลอดภัยในโพรโตคอล จึงควรมาใช้ HTTP SSL (Secure Socket Layer) เป็นระบบการรักษาความปลอดภัยในการ สื่อสารระหว่าง Web Client กับ Web Server สำหรับ SSL นั้นเป็นการทำงานในชั้น transport ที่ช่วยในการสร้างความปลอดภัย 3 ข้อคือ
+•	การเข้ารหัสข้อมูล
+•	การทำ Client & Server Authentication
+•	การทำ Data Integrity
+Infrastructure   ใช้ IAM สร้าง role สำหรับใช้งาน SA ที่สร้างมา เช่น ติดตั้ง Rancher-OS สามารถ Access Cluster ได้ โดยการทำ Role-Binding
+Data สามารถใช้ Private key สำหรับการเข้าไป Access โดยผ่าน keypair ที่สร้างขึ้นเองในเครื่อง หรือผ่าน KMS
+
+3.Base on your experience, how do you reduce your service downtime as much as possible during
+·  	software upgrade
+·  	database migration
+·  	incident
+Answer :
+software upgrade ใช้หลักการณ์ Blue/Green Deployment เป็นเทคนิคที่ช่วยให้การทำ Rollback ง่ายและรวดเร็วขึ้นเพราะถ้ามีอะไรผิดพลาดที่ Green เราก็สามารถสวิชท์เร้าเตอร์ให้ส่ง Request กลับมาที่ Blue ได้ มันไม่ใช่แค่การ Rollback ที่ระดับ Application หรือ Service แต่เป็นระดับ Environment เลยทีเดียว
+database migration อาจออกแบบระบบ High Availability หรือว่า HA นั้น เรียกได้ว่าเป็นระบบที่เกือบจะ Online ตลอดเวลาเลยก็ว่าได้ (Always on) เพราะว่าระบบนี้ เป็นระบบที่มี Data Center ด้วยกัน 2 Site ซึ่งทั้งสองแห่งจะทำการ Replicate ข้อมูลกันตลอดเวลา ระบบ HA จะเหมาะกับระบบที่สำคัญมาก ๆ ของคุณ ที่ไม่อาจให้เกิด Downtime ขึ้นได้
+ระบบจะทำการ Replicate ข้อมูลกันแบบ Realtime ยิ่งไปกว่านั้น หากระบบหลักของคุณมีปัญหาเกิดขึ้น ระบบจะทำการ Auto Failover ให้ทันที ความหมายก็คือ จะทำการสลับไปใช้อีกระบบนึงที่อยู่บน Cloud ให้เอง โดยที่มี RTO และ RPO ที่ต่ำมาก คุณอาจไม่รู้ตัวด้วยซ้ำว่าระบบมีปัญหาเกิดขึ้น เพราะว่าสามารถใช้งานได้อย่างต่อเนื่อง แทบไม่มี Downtime เกิดขึ้นเลย
+Incident ใช้ระบบ ITSM เป็นตัวเก็บข้อมูลเกี่ยวกับ SLA
+  
+4.Configuration management
+  a.Which Among Puppet, chef, Ansible, or another is the best Configuration management tool?
+  b.Why?
+  c.Do you still need to use it if you already have docker-swarm or Kubernetes?
+Answer :
+  a. Configuration management กระบวนการสำหรับสร้างและการรักษาประสิทธิภาพการทำงานของสิ่งที่เกิดขึ้นระหว่างการทำงาน และ IaC เองก็เป็นองค์ประกอบสำคัญของ configuration management — Configuration Management ช่วยให้องค์กรสามารถจัดการจัดระเบียบ และควบคุมการเปลี่ยนแปลงในเอกสาร Code และจัดการสิ่งต่างๆ อย่างเป็นระบบในช่วงการพัฒนาซอฟต์แวร์ ช่วยในการการเพิ่ม Productivity โดยมีข้อผิดพลาดน้อยที่สุด และช่วยตรวจสอบการ Config ค่าของซอฟต์แวร์ ตรวจสอบว่าซอฟต์แวร์ทั้งหมดตรงตามความต้องการของการทำงานหรือไม่
+  b. เหตุผลหลักสำหรับการใช้ Configuration management คือ มีหลายคนทำงานกับซอฟต์แวร์ที่มีการปรับปรุงอย่างต่อเนื่อง ความต้องการของผู้ใช้เปลี่ยนแปลงไป งบประมาณ และนโยบายต่างๆ และยังมีประโยชน์ในการควบคุมต้นทุนที่เกี่ยวข้องในการเปลี่ยนแปลงระบบ
+เครื่องมือ Configuration management ที่เป็นที่นิยม
+  Puppet
+  Chef
+  Ansible
+  SaltStack
+  c. ยังจำเป็นต้องใช้งาน เพราะถ้าไม่มี การทำในส่วนนี้ จะยังคงติดปัญหา 
+1.ปัญหา Environment drift เป็นปัญหาที่ปวดหัวสำหรับ Devops ในเรื่อง setting ต่างๆที่ต้องมี remote shell ไปแก้ไขเอง ซึ่งทำ ให้ release pipeline ก็ไม่ตรงกันอีก
+2.snowflake issue คือ ความไม่สอดคล้องของ configuration ทำให้ reproduce ก็ยาก การบำรุงรักษา ก็ยังต้องเป็น manual
+
+5.How do you design your Kubernetes cluster? what DNS, CNI, ingression is being used? Why?
+Answer :
+แม้ว่าบริการจะไม่ต้องการ DNS ในการทำงาน แต่ขอแนะนำอย่างยิ่งให้ตั้งค่าบริการ DNS บน Kubernetes โดยใช้ส่วนเสริม มีบริการ DNS หลายอย่างที่เข้ากันได้กับข้อกำหนด Kubernetes dns ซึ่งเป็นที่นิยมมากที่สุด 2 รายการ ได้แก่ :
+  CoreDNS
+  Kube-DNS
+และในส่วน Network Container CNI เป็น Antrea แทนที่จะเป็น Calico หรือ Flannel เพราะต้องการ CNI ที่ไม่มีการใช้ iptables เพื่อให้ทำงานได้ ซึ่ง Antrea ใช้ Open vSwitch เป็น data plane และดูคร่าว ๆ แล้วไม่มีการใช้ iptables
+CRI เป็น Docker ที่ไม่เปิด iptables และใช้ cgroups-driver เป็น system เหตุผลที่ไม่ใช้ iptables ก็ชัดเจน ส่วน cgroups-driver systemd เป็นข้อแนะนำสำหรับ K8s รุ่นใหม่ ที่ใช้งานร่วมกับ Docker (containerd)
+
+6.How do you measure service quality to give the best experience to your customer? (SLO, SLA)
+Answer :
+SLO ก็คือการกำหนดเป้าหมายด้านความทนทานของระบบ (Availability) โดยใช้ค่าเชิงตัวเลขเพื่อให้สามารถชี้วัดได้ และตัวเลขดังกล่าวนี้จะต้องถูกนำไปใช้พิจารณาในการตัดสินใจใดๆ ในเชิงสถาปัตยกรรมระบบ ว่าการออกแบบนั้นๆ จะมีค่าความทนทานในระดับที่ต้องการได้หรือเปล่า
+SLA คือข้อตกลงของ SLO ระหว่างเรากับลูกค้ารวมถึงสิ่งที่เราจะต้องรับผิดชอบหากระบบไม่สามารถทำตามข้อตกลงนั้นได้ โดยปกติแล้วเราสามารถกำหนด internal SLO สำหรับในทีมของเราเอง แล้วกำหนด SLA กับลูกค้าให้หลวมกว่า internal SLO นิดหน่อยได้ 
