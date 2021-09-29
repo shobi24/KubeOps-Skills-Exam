@@ -2,5 +2,6 @@
 test knowledge user
 - Normal
 - Intermediate
-- Hands-On
-- Algorithms
+- Professional
+  - Hands-On
+  - Algorithms
